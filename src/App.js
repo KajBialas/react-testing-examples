@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function Counter() {
-  const [ counter, setCounter ] = useState(0);
+function TodosList() {
+  const [ todos, setTodos ] = useState([]);
 
-  const incrementCounter = () => setCounter(counter + 1);
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/todos')
+      .then(response => response.json())
+      .then(json => setTodos(json));
+  });
+
+  const renderTodos = () => todos.map(todo => <div data-testid="todoListElement" key={todo.id}>{todo.title}</div>);
 
   return (
-    <div>
-      <div data-testid="counterScore">
-        {counter}
-      </div>
-      <button data-testid="counterIncrementButton" onClick={incrementCounter}>INCREMENT</button>
+    <div data-testid="todosList">
+      {renderTodos()}
     </div>
   );
 }
 
-export default Counter;
+export default TodosList;

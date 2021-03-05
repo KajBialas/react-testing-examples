@@ -1,21 +1,33 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import Counter from './App';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import TodosList from './App';
 
-describe('Counter.js', () => {
-  it('should correct render init value', () => {
-    render(<Counter />);
-    const scoreElement = screen.getByTestId('counterScore');
-    expect(scoreElement).toHaveTextContent('0');
+const mockResponse = [{
+  id: 1,
+  title: 'Example 1',
+}];
+
+beforeAll(() => jest.spyOn(window, 'fetch'))
+
+describe('TodoList.js', () => {
+  beforeEach(() => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      json: jest.fn().mockResolvedValue(mockResponse)
+    })
   });
 
-  it('should correct render value after click button', () => {
-    render(<Counter />);
-    const scoreElement = screen.getByTestId('counterScore');
-    const buttonElement = screen.getByTestId('counterIncrementButton');
-
-    fireEvent.click(buttonElement);
-
-    expect(scoreElement).toHaveTextContent('1');
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
-})
+
+  it('should working for example response', async () => {
+    await act(async () => {
+      render(<TodosList />);
+    });
+
+    const todoListNames = screen.getAllByTestId('todoListElement').map(div => div.textContent);
+    const expectedResult = mockResponse.map(element => element.title);
+
+    expect(expectedResult).toEqual(todoListNames);
+  });
+});
