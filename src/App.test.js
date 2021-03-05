@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import TodosList from './App';
 
 const mockResponse = [{
@@ -20,14 +20,18 @@ describe('TodoList.js', () => {
     jest.restoreAllMocks();
   });
 
-  it('should working for example response', async () => {
-    await act(async () => {
-      render(<TodosList />);
-    });
+  it('should display loader', async () => {
+    render(<TodosList />);
+    const todoLoader = screen.getAllByTestId('todosLoader');
+    expect(todoLoader).toBeTruthy();
+  });
 
+  it('should display data', async () => {
+    render(<TodosList />);
+    await act(async () => Promise.resolve());
     const todoListNames = screen.getAllByTestId('todoListElement').map(div => div.textContent);
     const expectedResult = mockResponse.map(element => element.title);
-
     expect(expectedResult).toEqual(todoListNames);
   });
+
 });
