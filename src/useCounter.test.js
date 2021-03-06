@@ -7,11 +7,5 @@ describe('useCounter', () => {
     expect(result.current.count).toBe(0);
   });
 
-  it('should return correct increment value', () => {
-    const { result } = renderHook(() => useCounter())
-    act(() => {
-      result.current.increment()
-    })
-    expect(result.current.count).toBe(1)
-  });
+
 });

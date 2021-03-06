@@ -7,7 +7,6 @@ const mockResponse = [{
   title: 'Example 1',
 }];
 
-beforeAll(() => jest.spyOn(window, 'fetch'))
 
 describe('TodoList.js', () => {
   beforeEach(() => {
